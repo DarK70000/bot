@@ -1,20 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
+import { Client, GatewayIntentBits } from 'discord.js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds]
+});
 
-async function run() {
-  console.log("Worker started");
+client.once('ready', () => {
+  console.log(`✅ Logged in as ${client.user.tag}`);
+});
 
-  while (true) {
-    const { data } = await supabase.from("bots").select("*");
-
-    console.log("Bots found:", data?.length || 0);
-
-    await new Promise(r => setTimeout(r, 5000));
-  }
-}
-
-run();
+client.login(process.env.DISCORD_TOKEN);
